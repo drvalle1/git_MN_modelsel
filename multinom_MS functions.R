@@ -25,7 +25,7 @@ sample.z=function(y,cov,betas,b,class1,nobs,nclass){
   #------------------------------
   #get z
   cond=y==class1[1]
-  z[cond]=tnorm(sum(cond),lo=-1000,hi=b[1],mu=media[cond],sig=1)
+  z[cond]=tnorm(sum(cond),lo=-100,hi=b[1],mu=media[cond],sig=1)
   
   for (i in 2:(nclass-1)){
     cond=y==class1[i]
@@ -33,7 +33,7 @@ sample.z=function(y,cov,betas,b,class1,nobs,nclass){
   }
 
   cond=y==class1[nclass]
-  z[cond]=tnorm(sum(cond),lo=b[nclass-1],hi=1000,mu=media[cond],sig=1)
+  z[cond]=tnorm(sum(cond),lo=b[nclass-1],hi=100,mu=media[cond],sig=1)
   z
 }
 #----------------------------------------------------------------------------------------------
@@ -124,13 +124,22 @@ death=function(indinz){
 }
 #---------------------------------------------------------------------------------------------------
 swap=function(indinz,indoutz){
-  k=sample(1:length(indinz),size=1)  
-  tmp=indinz[-k]
-  include=sample(indoutz,size=1)
+  n=length(indinz)
+  if (n==1) tmp=numeric()
+  if (n >1) {
+    k=sample(1:n,size=1)  
+    tmp=indinz[-k]
+  }
+  
+  n=length(indoutz)
+  if (n==1) include=indoutz
+  if (n> 1) include=sample(indoutz,size=1)
   sort(c(tmp,include))
 }
 #---------------------------------------------------------------------------------------------------
 birth=function(indinz,indoutz){
-  k=sample(indoutz,size=1)
+  n=length(indoutz)
+  if (n==1) k=indoutz
+  if (n>1 ) k=sample(indoutz,size=1)
   sort(c(indinz,k))
 }

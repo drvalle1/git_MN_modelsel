@@ -11,7 +11,7 @@ multinom.gibbs=function(dat,ngibbs,covs,burnin,prior.var){
   
   #get initial values
   z=(dat2$y1-mean(dat2$y1))/sd(dat2$y1)
-  b=tmp[1:(nclass-1)]+0.1
+  b=class1[1:(nclass-1)]+0.1
   b=(b-mean(dat2$y1))/sd(dat2$y1)
   xmat.orig=cov=data.matrix(dat2[,covs])
   maxp=ncol(cov)
@@ -28,6 +28,11 @@ multinom.gibbs=function(dat,ngibbs,covs,burnin,prior.var){
   options(warn=2)
   for (i in 1:ngibbs){
     print(c(i,indin))
+    # print(c(i,b))
+    
+    #to flag when a covariate is chosen multiple times
+    tmp=table(indin)
+    if (sum(tmp>1)>0) break;
     
     z=sample.z(y=dat2$y1,cov=cov,betas=betas,b=b,class1=class1,nobs=nobs,nclass=nclass)
     b=sample.b(z=z,y=dat2$y1,nclass=nclass,class1=class1)
